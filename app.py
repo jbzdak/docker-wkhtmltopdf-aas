@@ -22,24 +22,30 @@ def application(request):
     The application will return a response with the PDF file.
     """
     if request.method != 'POST':
-        return
+        return Response()
 
-    request_is_json = request.content_type.endswith('json')
+    def decode_and_write(contents, file):
+        file.write(contents.decode('base64'))
+        file.flush()
 
-    with tempfile.NamedTemporaryFile(suffix='.html') as source_file:
+    with tempfile.NamedTemporaryFile(suffix='.html') as source_file, \
+            tempfile.NamedTemporaryFile(suffix='.html') as footer_file, \
+            tempfile.NamedTemporaryFile(suffix='.html') as header_file:
 
-        if request_is_json:
-            # If a JSON payload is there, all data is in the payload
-            payload = json.loads(request.data)
-            source_file.write(payload['contents'].decode('base64'))
-            options = payload.get('options', {})
-        elif request.files:
-            # First check if any files were uploaded
-            source_file.write(request.files['file'].read())
-            # Load any options that may have been provided in options
-            options = json.loads(request.form.get('options', '{}'))
+        # If a JSON payload is there, all data is in the payload
+        payload = json.loads(request.data)
+        decode_and_write(payload['contents'], source_file)
+        options = payload.get('options', {})
 
-        source_file.flush()
+        header_contents = options.pop("header-html-contents", None)
+        footer_contents = options.pop("footer-html-contents", None)
+
+        if header_contents:
+            decode_and_write(header_contents, header_file)
+            options['header-html'] = header_file.name
+        if footer_contents:
+            decode_and_write(footer_contents, footer_file)
+            options['footer-html'] = footer_file.name
 
         # Evaluate argument to run with subprocess
         args = ['wkhtmltopdf']

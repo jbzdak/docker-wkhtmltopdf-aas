@@ -1,0 +1,6 @@
+version: "3.0"
+services:
+  wkhtml:
+    build:
+      context: .
+    image: i2biz/docker-wkhtmltopdf-aas:latest
