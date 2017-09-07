@@ -48,7 +48,7 @@ def application(request):
             options['footer-html'] = footer_file.name
 
         # Evaluate argument to run with subprocess
-        args = ['wkhtmltopdf']
+        args = ['/wkhtmltopdf/bin/wkhtmltopdf']
 
         # Add Global Options
         if options:
