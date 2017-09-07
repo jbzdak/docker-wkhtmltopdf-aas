@@ -32,20 +32,6 @@ Take a note of the public port number where docker binds to.
 There are multiple ways to generate a PDF of HTML using the
 service.
 
-### Uploading a HTML file
-
-This is a convenient way to use the service from command line
-utilities like curl.
-
-```sh
-curl -X POST -vv -F 'file=@path/to/local/file.html' http://<docker-host>:<port>/ -o path/to/output/file.pdf
-```
-
-where:
-
-* docker-host is the hostname or address of the docker host running the container
-* port is the public port to which the container is bound to.
-
 ### JSON API
 
 If you are planning on using this service in your application,

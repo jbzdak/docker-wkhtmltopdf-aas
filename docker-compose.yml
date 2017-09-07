@@ -3,4 +3,4 @@ services:
   wkhtml:
     build:
       context: .
-    image: i2biz/docker-wkhtmltopdf-aas:latest
+    image: jbzdak/docker-wkhtmltopdf-aas:latest
